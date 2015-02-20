@@ -39,10 +39,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fixtures
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-fixtures :each (tucore/make-db-refresher db-uri
-                                              conn
-                                              apptxn-partition
-                                              apptxn-schema-filename))
+(use-fixtures :each (tucore/make-db-refresher-fixture-fn db-uri
+                                                         conn
+                                                         apptxn-partition
+                                                         apptxn-schema-filename))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; The Tests
@@ -93,7 +93,7 @@
                                                             "json"
                                                             "UTF-8")))
             resp (app req)]
-        (testing "status code" (is (= 204 (:status resp))))
+        (testing "status code" (is (= 202 (:status resp))))
         (testing "App transaction logs actually got written to database."
           (let [apptxn-id "TXN1-3BB05024-B7F6-4B66-838B-F6982FCB08DF"
                 apptxn-entid (apptxncore/find-apptxn-by-id @conn apptxn-id)]

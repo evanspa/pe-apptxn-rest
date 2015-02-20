@@ -1,7 +1,7 @@
 (ns pe-apptxn-restsupport.test-utils
-  (:require [pe-apptxn-restsupport.resource-support :as ressupport]
+  (:require [pe-apptxn-restsupport.resource-support2 :as ressupport]
             [pe-apptxn-restsupport.meta :as meta]
-            [pe-rest-utils.core :as rucore]
+            [pe-rest-utils.core2 :as rucore]
             [pe-rest-utils.meta :as rumeta]
             [liberator.core :refer [defresource]]))
 
@@ -25,6 +25,5 @@
   :available-languages rumeta/supported-languages
   :allowed-methods [:post]
   :known-content-type? (rucore/known-content-type-predicate meta/supported-media-types)
-  :new? false ; so we return a 204 instead of a 201
   :post! (fn [ctx] (ressupport/handle-apptxnset-post! ctx conn apptxn-partition nil nil nil))
   :handle-created rucore/handle-resp)

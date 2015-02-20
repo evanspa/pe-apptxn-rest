@@ -3,7 +3,7 @@
             [clj-time.core :as t]
             [pe-apptxn-restsupport.meta :as meta]
             [clojure.tools.logging :as log]
-            [pe-rest-utils.macros :refer [defprocessor
+            [pe-rest-utils.macros :refer [defprocessor-post
                                           defproctemplate-post
                                           defprocessor-impl-post]]
             [pe-rest-utils.core :as rucore]
@@ -21,6 +21,10 @@
   (rucore/handle-post! ctx
                        conn
                        partition
+                       nil
+                       nil
+                       nil
+                       nil ; parent-entids
                        user-entid
                        nil
                        nil
@@ -107,7 +111,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; handler processors and hypermedia generators
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defprocessor apptxnset-process-post!)
+(defprocessor-post apptxnset-process-post!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; processor templates (these do the actual 'work' - and are invoked after the
@@ -123,7 +127,6 @@
   nil
   nil
   apptxncore/save-apptxnset-txnmaps
-  nil
   nil
   nil
   nil

@@ -16,7 +16,15 @@
             [pe-apptxn-restsupport.test-utils :refer [apptxn-schema-filename
                                                       db-uri
                                                       apptxn-partition
-                                                      apptxns-test-url
+                                                      apptxnhdr-auth-token
+                                                      apptxnhdr-error-mask
+                                                      apptxnhdr-apptxn-id
+                                                      apptxnhdr-useragent-device-make
+                                                      apptxnhdr-useragent-device-os
+                                                      apptxnhdr-useragent-device-os-version
+                                                      base-url
+                                                      entity-uri-prefix
+                                                      entity-uri-template
                                                       apptxnset-res]]))
 (def conn (atom nil))
 
@@ -24,9 +32,17 @@
 ;; Routes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defroutes routes
-  (ANY apptxns-test-url
+  (ANY entity-uri-template
        []
-       (apptxnset-res @conn)))
+       (apptxnset-res @conn
+                      apptxnhdr-auth-token
+                      apptxnhdr-error-mask
+                      base-url
+                      entity-uri-prefix
+                      apptxnhdr-apptxn-id
+                      apptxnhdr-useragent-device-make
+                      apptxnhdr-useragent-device-os
+                      apptxnhdr-useragent-device-os-version)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Middleware-decorated app
@@ -85,7 +101,11 @@
                                             "json"
                                             "en-US"
                                             :post
-                                            apptxns-test-url)
+                                            entity-uri-template
+                                            apptxnhdr-apptxn-id
+                                            apptxnhdr-useragent-device-make
+                                            apptxnhdr-useragent-device-os
+                                            apptxnhdr-useragent-device-os-version)
                     (mock/body (json/write-str apptxnset))
                     (mock/content-type (rucore/content-type rumeta/mt-type
                                                             meta/mt-subtype-apptxnset

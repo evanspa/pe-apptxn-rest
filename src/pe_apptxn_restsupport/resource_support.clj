@@ -1,6 +1,7 @@
 (ns pe-apptxn-restsupport.resource-support
   (:require [datomic.api :refer [q db] :as d]
             [clj-time.core :as t]
+            [liberator.core :refer [defresource]]
             [pe-apptxn-restsupport.meta :as meta]
             [clojure.tools.logging :as log]
             [clojure.walk :refer [keywordize-keys]]
@@ -21,7 +22,7 @@
 (defn handle-apptxnset-post!
   [ctx
    conn
-   partition
+   apptxn-partition
    hdr-apptxn-id
    hdr-useragent-device-make
    hdr-useragent-device-os
@@ -33,7 +34,8 @@
   (rucore/put-or-post-invoker ctx
                               :post-as-create-async
                               conn
-                              partition
+                              apptxn-partition
+                              apptxn-partition
                               hdr-apptxn-id
                               hdr-useragent-device-make
                               hdr-useragent-device-os
@@ -79,3 +81,39 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defmulti-by-version apptxn-async-logger meta/v001)
 (defmulti-by-version make-apptxn meta/v001)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Resource
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defresource apptxnset-res [conn
+                            apptxn-partition
+                            mt-subtype-prefix
+                            hdr-auth-token
+                            hdr-error-mask
+                            base-url
+                            entity-uri-prefix
+                            hdr-apptxn-id
+                            hdr-useragent-device-make
+                            hdr-useragent-device-os
+                            hdr-useragent-device-os-version
+                            authorized-fn]
+  :available-media-types (rucore/enumerate-media-types (meta/supported-media-types mt-subtype-prefix))
+  :available-charsets rumeta/supported-char-sets
+  :available-languages rumeta/supported-languages
+  :allowed-methods [:post]
+  :authorized? authorized-fn
+  :known-content-type? (rucore/known-content-type-predicate (meta/supported-media-types mt-subtype-prefix))
+  :post! (fn [ctx] (handle-apptxnset-post! ctx
+                                           conn
+                                           apptxn-partition
+                                           hdr-apptxn-id
+                                           hdr-useragent-device-make
+                                           hdr-useragent-device-os
+                                           hdr-useragent-device-os-version
+                                           base-url
+                                           entity-uri-prefix
+                                           (:uri (:request ctx))
+                                           nil))
+  :handle-created (fn [ctx] (rucore/handle-resp ctx
+                                                hdr-auth-token
+                                                hdr-error-mask)))

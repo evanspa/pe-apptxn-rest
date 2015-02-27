@@ -7,15 +7,18 @@
             [compojure.handler :as handler]
             [ring.mock.request :as mock]
             [pe-apptxn-restsupport.meta :as meta]
+            [pe-apptxn-restsupport.resource-support :as apptxnres]
+            [pe-apptxn-restsupport.version.resource-support-v001]
             [pe-apptxn-core.core :as apptxncore]
             [pe-core-testutils.core :as tucore]
             [pe-rest-testutils.core :as rtucore]
             [pe-core-utils.core :as ucore]
             [pe-rest-utils.core :as rucore]
             [pe-rest-utils.meta :as rumeta]
-            [pe-apptxn-restsupport.test-utils :refer [apptxn-schema-filename
+            [pe-apptxn-restsupport.test-utils :refer [apptxn-schema-files
                                                       db-uri
                                                       apptxn-partition
+                                                      apptxnmt-subtype-prefix
                                                       apptxnhdr-auth-token
                                                       apptxnhdr-error-mask
                                                       apptxnhdr-apptxn-id
@@ -24,8 +27,7 @@
                                                       apptxnhdr-useragent-device-os-version
                                                       base-url
                                                       entity-uri-prefix
-                                                      entity-uri-template
-                                                      apptxnset-res]]))
+                                                      entity-uri-template]]))
 (def conn (atom nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -34,15 +36,18 @@
 (defroutes routes
   (ANY entity-uri-template
        []
-       (apptxnset-res @conn
-                      apptxnhdr-auth-token
-                      apptxnhdr-error-mask
-                      base-url
-                      entity-uri-prefix
-                      apptxnhdr-apptxn-id
-                      apptxnhdr-useragent-device-make
-                      apptxnhdr-useragent-device-os
-                      apptxnhdr-useragent-device-os-version)))
+       (apptxnres/apptxnset-res @conn
+                                apptxn-partition
+                                apptxnmt-subtype-prefix
+                                apptxnhdr-auth-token
+                                apptxnhdr-error-mask
+                                base-url
+                                entity-uri-prefix
+                                apptxnhdr-apptxn-id
+                                apptxnhdr-useragent-device-make
+                                apptxnhdr-useragent-device-os
+                                apptxnhdr-useragent-device-os-version
+                                (fn [ctx] true))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Middleware-decorated app
@@ -58,7 +63,7 @@
 (use-fixtures :each (tucore/make-db-refresher-fixture-fn db-uri
                                                          conn
                                                          apptxn-partition
-                                                         apptxn-schema-filename))
+                                                         apptxn-schema-files))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; The Tests
@@ -95,7 +100,7 @@
                                    "apptxn/user-agent-device-os" "iPhone OS",
                                    "apptxn/user-agent-device-make" "x86_64"}]}
             req (-> (rtucore/req-w-std-hdrs rumeta/mt-type
-                                            meta/mt-subtype-apptxnset
+                                            (meta/mt-subtype-apptxnset apptxnmt-subtype-prefix)
                                             meta/v001
                                             "UTF-8;q=1,ISO-8859-1;q=0"
                                             "json"
@@ -108,7 +113,7 @@
                                             apptxnhdr-useragent-device-os-version)
                     (mock/body (json/write-str apptxnset))
                     (mock/content-type (rucore/content-type rumeta/mt-type
-                                                            meta/mt-subtype-apptxnset
+                                                            (meta/mt-subtype-apptxnset apptxnmt-subtype-prefix)
                                                             meta/v001
                                                             "json"
                                                             "UTF-8")))

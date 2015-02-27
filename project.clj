@@ -10,6 +10,8 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/data.codec "0.1.0"]
                  [org.clojure/data.json "0.2.5"]
+                 [compojure "1.2.1"]
+                 [liberator "0.12.2"]
                  [com.datomic/datomic-free "0.9.5130"
                   :exclusions [org.slf4j/slf4j-nop
                                joda-time
@@ -27,8 +29,6 @@
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/java.classpath "0.2.2"]
                                   [org.clojure/data.json "0.2.5"]
-                                  [compojure "1.2.1"]
-                                  [liberator "0.12.2"]
                                   [pe-core-testutils "0.0.1-SNAPSHOT"]
                                   [pe-rest-testutils "0.0.1-SNAPSHOT"]
                                   [ring-server "0.3.1"]

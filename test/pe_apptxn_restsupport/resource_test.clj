@@ -10,7 +10,7 @@
             [pe-apptxn-restsupport.resource-support :as apptxnres]
             [pe-apptxn-restsupport.version.resource-support-v001]
             [pe-apptxn-core.core :as apptxncore]
-            [pe-core-testutils.core :as tucore]
+            [pe-datomic-testutils.core :as dtucore]
             [pe-rest-testutils.core :as rtucore]
             [pe-core-utils.core :as ucore]
             [pe-rest-utils.core :as rucore]
@@ -60,10 +60,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fixtures
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-fixtures :each (tucore/make-db-refresher-fixture-fn db-uri
-                                                         conn
-                                                         apptxn-partition
-                                                         apptxn-schema-files))
+(use-fixtures :each (dtucore/make-db-refresher-fixture-fn db-uri
+                                                          conn
+                                                          apptxn-partition
+                                                          apptxn-schema-files))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; The Tests

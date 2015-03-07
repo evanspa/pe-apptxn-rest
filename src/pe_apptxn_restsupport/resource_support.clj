@@ -1,4 +1,6 @@
 (ns pe-apptxn-restsupport.resource-support
+  "Core components for exposing the server-side processing of the
+  PEAppTransaction Logging Framework as a REST API."
   (:require [datomic.api :refer [q db] :as d]
             [clj-time.core :as t]
             [liberator.core :refer [defresource]]
@@ -20,6 +22,8 @@
 ;; Handler
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn handle-apptxnset-post!
+  "liberator handler function of post-as-create calls for persisting sets of
+  application transactions."
   [ctx
    conn
    apptxn-partition
@@ -83,7 +87,7 @@
 (defmulti-by-version make-apptxn meta/v001)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Resource
+;; resource
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defresource apptxnset-res [conn
                             apptxn-partition

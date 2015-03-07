@@ -129,7 +129,8 @@
               (is (= (:apptxn/user-agent-device-make apptxn-ent) "x86_64"))
               (is (= (:apptxn/user-agent-device-os apptxn-ent) "iPhone OS"))
               (is (= (:apptxn/user-agent-device-os-version apptxn-ent) "8.1"))
-              (let [apptxnlogs (apptxncore/apptxnlogs-for-apptxnid @conn apptxn-id)]
+              (let [apptxnlogs (apptxncore/apptxnlogs-for-apptxnid @conn apptxn-id)
+                    apptxnlogs (sort-by :apptxnlog/timestamp apptxnlogs)]
                 (is (= 2 (count apptxnlogs)))
                 (let [apptxnlog-entid (ffirst apptxnlogs)
                       apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]

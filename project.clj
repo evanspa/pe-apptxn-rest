@@ -15,8 +15,8 @@
                   :exclusions [org.slf4j/slf4j-nop
                                joda-time
                                org.slf4j/slf4j-log4j12]]
-                 [pe-apptxn-core "0.0.1-SNAPSHOT"]
-                 [pe-rest-utils "0.0.1-SNAPSHOT"]
+                 [pe-apptxn-core "0.0.1"]
+                 [pe-rest-utils "0.0.1"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]
                  [clj-time "0.8.0"]]
@@ -30,8 +30,9 @@
                    :dependencies [[org.clojure/tools.namespace "0.2.7"]
                                   [org.clojure/java.classpath "0.2.2"]
                                   [org.clojure/data.json "0.2.5"]
-                                  [pe-datomic-testutils "0.0.1-SNAPSHOT"]
-                                  [pe-rest-testutils "0.0.1-SNAPSHOT"]
+                                  [org.clojure/tools.nrepl "0.2.7"]
+                                  [pe-datomic-testutils "0.0.1"]
+                                  [pe-rest-testutils "0.0.1"]
                                   [org.clojure/tools.nrepl "0.2.7"]
                                   [ring-server "0.3.1"]
                                   [ring-mock "0.1.5"]]}}

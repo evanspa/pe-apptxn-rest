@@ -155,16 +155,9 @@
               (is (= (:apptxn/user-agent-device-os apptxn-ent) "iPhone OS"))
               (is (= (:apptxn/user-agent-device-os-version apptxn-ent) "8.0.4"))
               (let [apptxnlogs (apptxncore/apptxnlogs-for-apptxnid @conn apptxn-id)
-                    apptxnlogs (vec apptxnlogs)]
+                    apptxnlogs (sort-by :apptxnlog/timestamp (vec apptxnlogs))]
                 (is (= 3 (count apptxnlogs)))
                 (let [[[apptxnlog-entid]] apptxnlogs
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
-                  (is (= 1 (:apptxnlog/usecase-event apptxnlog-ent)))
-                  (is (= 99 (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
-                  (is (= "Mmmkay" (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
-                  (is (= (ucore/rfc7231str->instant "Tue, 13 Jan 2015 13:11:42 EST")
-                         (:apptxnlog/timestamp apptxnlog-ent))))
-                (let [[_ _ [apptxnlog-entid]] apptxnlogs
                       apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
                   (is (= 3 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
@@ -172,6 +165,13 @@
                   (is (= (ucore/rfc7231str->instant "Mon, 12 Jan 2015 13:11:42 EST")
                          (:apptxnlog/timestamp apptxnlog-ent))))
                 (let [[_ [apptxnlog-entid]] apptxnlogs
+                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
+                  (is (= 1 (:apptxnlog/usecase-event apptxnlog-ent)))
+                  (is (= 99 (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
+                  (is (= "Mmmkay" (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
+                  (is (= (ucore/rfc7231str->instant "Tue, 13 Jan 2015 13:11:42 EST")
+                         (:apptxnlog/timestamp apptxnlog-ent))))
+                (let [[_ _ [apptxnlog-entid]] apptxnlogs
                       apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
                   (is (= 0 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-code apptxnlog-ent)))

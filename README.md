@@ -11,5 +11,5 @@ pe-apptxn-restsupport is available from Clojars.  Add the following dependency t
 `project.clj` file:
 
 ```
-[pe-apptxn-restsupport "0.0.1"]
+[pe-apptxn-restsupport "0.0.2"]
 ```

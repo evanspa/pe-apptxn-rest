@@ -14,6 +14,7 @@
             [pe-rest-testutils.core :as rtucore]
             [pe-core-utils.core :as ucore]
             [pe-rest-utils.core :as rucore]
+            [clojure.tools.logging :as log]
             [pe-rest-utils.meta :as rumeta]
             [pe-apptxn-restsupport.test-utils :refer [apptxn-schema-files
                                                       db-uri
@@ -130,17 +131,16 @@
               (is (= (:apptxn/user-agent-device-os apptxn-ent) "iPhone OS"))
               (is (= (:apptxn/user-agent-device-os-version apptxn-ent) "8.1"))
               (let [apptxnlogs (apptxncore/apptxnlogs-for-apptxnid @conn apptxn-id)
-                    apptxnlogs (sort-by :apptxnlog/timestamp apptxnlogs)]
+                    apptxnlogs (map #(into {} (d/entity (d/db @conn) (first %))) apptxnlogs)
+                    apptxnlogs (vec (sort-by :apptxnlog/usecase-event apptxnlogs))]
                 (is (= 2 (count apptxnlogs)))
-                (let [apptxnlog-entid (ffirst apptxnlogs)
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
+                (let [[apptxnlog-ent _] apptxnlogs]
                   (is (= 1 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (= 42 (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
                   (is (= "Baaad!" (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
                   (is (= (ucore/rfc7231str->instant "Thu, 15 Jan 2015 13:11:42 EST")
                          (:apptxnlog/timestamp apptxnlog-ent))))
-                (let [apptxnlog-entid (first (second apptxnlogs))
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
+                (let [[_ apptxnlog-ent] apptxnlogs]
                   (is (= 2 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
@@ -156,26 +156,24 @@
               (is (= (:apptxn/user-agent-device-os apptxn-ent) "iPhone OS"))
               (is (= (:apptxn/user-agent-device-os-version apptxn-ent) "8.0.4"))
               (let [apptxnlogs (apptxncore/apptxnlogs-for-apptxnid @conn apptxn-id)
-                    apptxnlogs (sort-by :apptxnlog/timestamp (vec apptxnlogs))]
+                    apptxnlogs (map #(into {} (d/entity (d/db @conn) (first %))) apptxnlogs)
+                    apptxnlogs (vec (sort-by :apptxnlog/usecase-event apptxnlogs))]
                 (is (= 3 (count apptxnlogs)))
-                (let [[[apptxnlog-entid]] apptxnlogs
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
-                  (is (= 3 (:apptxnlog/usecase-event apptxnlog-ent)))
+                (let [[apptxnlog-ent _ _] apptxnlogs]
+                  (is (= 0 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
-                  (is (= (ucore/rfc7231str->instant "Mon, 12 Jan 2015 13:11:42 EST")
+                  (is (= (ucore/rfc7231str->instant "Wed, 14 Jan 2015 13:11:42 EST")
                          (:apptxnlog/timestamp apptxnlog-ent))))
-                (let [[_ [apptxnlog-entid]] apptxnlogs
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
+                (let [[_ apptxnlog-ent _] apptxnlogs]
                   (is (= 1 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (= 99 (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
                   (is (= "Mmmkay" (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
                   (is (= (ucore/rfc7231str->instant "Tue, 13 Jan 2015 13:11:42 EST")
                          (:apptxnlog/timestamp apptxnlog-ent))))
-                (let [[_ _ [apptxnlog-entid]] apptxnlogs
-                      apptxnlog-ent (d/entity (d/db @conn) apptxnlog-entid)]
-                  (is (= 0 (:apptxnlog/usecase-event apptxnlog-ent)))
+                (let [[_ _ apptxnlog-ent] apptxnlogs]
+                  (is (= 3 (:apptxnlog/usecase-event apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-code apptxnlog-ent)))
                   (is (nil? (:apptxnlog/in-ctx-err-desc apptxnlog-ent)))
-                  (is (= (ucore/rfc7231str->instant "Wed, 14 Jan 2015 13:11:42 EST")
+                  (is (= (ucore/rfc7231str->instant "Mon, 12 Jan 2015 13:11:42 EST")
                          (:apptxnlog/timestamp apptxnlog-ent))))))))))))

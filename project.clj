@@ -1,4 +1,4 @@
-(defproject pe-apptxn-restsupport "0.0.4"
+(defproject pe-apptxn-restsupport "0.0.5-SNAPSHOT"
   :description "A Clojure library encapsulating the REST API of the PEAppTransaction Logging Framework."
   :url "https://github.com/evanspa/pe-apptxn-restsupport"
   :license {:name "MIT"

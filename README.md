@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/evanspa/pe-apptxn-restsupport.svg)](https://travis-ci.org/evanspa/pe-apptxn-restsupport)
 
-A Clojure library encapsulating the REST API of the PEAppTransaction Logging
-Framework.
+A Clojure library encapsulating the server-side REST API of the PEAppTransaction Logging
+Framework.  pe-apptxn-restsupport can be thought of as simply exposing a REST API on top of the functionality of [pe-apptxn-core](https://github.com/evanspa/pe-apptxn-core).
 
 pe-apptxn-restsupport is part of the
 [pe-* Clojure Library Suite](#pe--clojure-library-suite).

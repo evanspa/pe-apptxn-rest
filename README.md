@@ -50,7 +50,7 @@ pe-apptxn-restsupport is available from Clojars.  Add the following dependency t
 `project.clj` file:
 
 ```
-[pe-apptxn-restsupport "0.0.6"]
+[pe-apptxn-restsupport "0.0.7"]
 ```
 
 ## pe-* Clojure Library Suite

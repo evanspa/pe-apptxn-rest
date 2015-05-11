@@ -17,12 +17,20 @@
 ;; 0.0.1 body-data transformation functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defmethod body-data-in-transform-fn meta/v001
-  [version body-data]
-  (identity body-data))
+  [version
+   conn
+   _
+   apptxnset
+   apptxnlogger]
+  (identity apptxnset))
 
 (defmethod body-data-out-transform-fn meta/v001
-  [version body-data]
-  (identity body-data))
+  [version
+   conn
+   _
+   apptxnset-resp
+   apptxnlogger]
+  (identity apptxnset-resp))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 0.0.1 save-entity functions

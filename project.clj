@@ -16,13 +16,13 @@
                                joda-time
                                org.slf4j/slf4j-log4j12]]
                  [pe-apptxn-core "0.0.2"]
-                 [pe-rest-utils "0.0.4"]
+                 [pe-rest-utils "0.0.5"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [org.slf4j/slf4j-api "1.7.5"]
                  [clj-time "0.8.0"]]
   :resource-paths ["resources"]
   :codox {:exclude [user]
-          :src-dir-uri "https://github.com/evanspa/pe-apptxn-restsupport/blob/0.0.6/"
+          :src-dir-uri "https://github.com/evanspa/pe-apptxn-restsupport/blob/0.0.7/"
           :src-linenum-anchor-prefix "L"}
   :profiles {:dev {:source-paths ["dev"]  ;ensures 'user.clj' gets auto-loaded
                    :plugins [[cider/cider-nrepl "0.9.0-SNAPSHOT"]
